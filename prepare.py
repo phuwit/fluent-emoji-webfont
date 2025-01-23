@@ -13,8 +13,6 @@ def main():
     dest_dir = Path("build")
     glyph_map: dict[Path, Path] = {}
     numElementsGroupCriteria = 20
-    fallback_paths: list[Path] = [Path('noto-emoji/third_party/region-flags/waved-svg'), Path('noto-emoji/svg')]
-
 
     def getCodePoint(glyph_dir: str):
         glyph_metadata_path = glyph_dir / "metadata.json"
@@ -200,17 +198,6 @@ def main():
                 numGroup += 1
                 numElementsGroup = 0
 
-    def prepare_fallback(fallback_path: Path):
-        existing_glyphs = set(i.name() for i in dest_dir.iterdir())
-        fallback_candidate_glyphs = set(i.name() for i in fallback_path.iterdir())
-
-        fallback_glyphs = fallback_candidate_glyphs - existing_glyphs
-
-        for glyph_name in fallback_glyphs:
-            subprocess.run(f'cp {fallback_path.joinpath(glyph_name)} {dest_dir}', check=True)
-
-
-
     skintone_map = {
         "1f3fb": "Light",
         "1f3fc": "Medium-Light",
@@ -289,7 +276,7 @@ def main():
         makeGlyphMap(glyph_dir)
 
     # Remove incompatible <mask> elements from SVG files.
-    dest_dir.mkdir()
+    dest_dir.mkdir(exist_ok=True)
     register_namespace("", "http://www.w3.org/2000/svg")
     for src_path, dest_path in glyph_map.items():
         if fonttype == "High Contrast":
@@ -315,10 +302,6 @@ def main():
                     " Resulting SVG may look different."
                 )
         dest_path.write_text(tostring(tree.getroot(), encoding="unicode"))
-
-
-    for fallpack_path in fallback_paths:
-        prepare_fallback(fallback_path=fallpack_path)
 
 if (__name__ == '__main__'):
     main()

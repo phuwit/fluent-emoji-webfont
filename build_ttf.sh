@@ -46,6 +46,10 @@ for name in ${FILES}; do
   mv ${name} ${name:10:100}
 done
 
+popd
+python -m noto_fallbacks
+pushd build
+
 FILES=$(find . -maxdepth 1 -name "*.svg" | sort)
 
 TTFFILENAME=$(echo "FluentEmoji${FONTTYPE}.ttf" | sed 's/ //g')
