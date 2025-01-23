@@ -1,3 +1,6 @@
 [submodule "fluentui-emoji"]
 	path = fluentui-emoji
 	url = https://github.com/microsoft/fluentui-emoji.git
+[submodule "noto-emoji"]
+	path = noto-emoji
+	url = https://github.com/googlefonts/noto-emoji.git
